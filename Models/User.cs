@@ -10,5 +10,8 @@ namespace WorkspaceAPI.Models
         public string Password { get; set; } = string.Empty;
         public DateTime? LastActive { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public ICollection<Workspace> WorkspaceCreators { get; } = new List<Workspace>();
+        public ICollection<WorkspaceMember> WorkspaceMembers { get; } = new List<WorkspaceMember>();
     }
 }

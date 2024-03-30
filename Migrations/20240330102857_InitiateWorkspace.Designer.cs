@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WorkspaceAPI.Models;
@@ -11,9 +12,11 @@ using WorkspaceAPI.Models;
 namespace WorkspaceAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240330102857_InitiateWorkspace")]
+    partial class InitiateWorkspace
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,7 +121,7 @@ namespace WorkspaceAPI.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Workspaces");
+                    b.ToTable("Workspace");
                 });
 
             modelBuilder.Entity("WorkspaceAPI.Models.WorkspaceMember", b =>
@@ -147,7 +150,7 @@ namespace WorkspaceAPI.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("WorkspaceMembers");
+                    b.ToTable("WorkspaceMember");
                 });
 
             modelBuilder.Entity("WorkspaceAPI.Models.Workspace", b =>
@@ -170,7 +173,7 @@ namespace WorkspaceAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("WorkspaceAPI.Models.Workspace", "Workspace")
-                        .WithMany("Members")
+                        .WithMany()
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -185,11 +188,6 @@ namespace WorkspaceAPI.Migrations
                     b.Navigation("WorkspaceCreators");
 
                     b.Navigation("WorkspaceMembers");
-                });
-
-            modelBuilder.Entity("WorkspaceAPI.Models.Workspace", b =>
-                {
-                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WorkspaceAPI.Models;
@@ -11,9 +12,11 @@ using WorkspaceAPI.Models;
 namespace WorkspaceAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240330104010_AlterWorkspaceAddMembers")]
+    partial class AlterWorkspaceAddMembers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,7 +121,7 @@ namespace WorkspaceAPI.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Workspaces");
+                    b.ToTable("Workspace");
                 });
 
             modelBuilder.Entity("WorkspaceAPI.Models.WorkspaceMember", b =>
@@ -147,7 +150,7 @@ namespace WorkspaceAPI.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("WorkspaceMembers");
+                    b.ToTable("WorkspaceMember");
                 });
 
             modelBuilder.Entity("WorkspaceAPI.Models.Workspace", b =>
