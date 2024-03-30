@@ -16,11 +16,12 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(builder.Configuration["Database:ConnectionString"]));
 
 // Services
-builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<IEmailClient, SMTPClient>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddSingleton<IEmailClient, SMTPClient>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IOTPService, OTPService>();
+builder.Services.AddScoped<IJWTService, JWTService>();
 
 var app = builder.Build();
 

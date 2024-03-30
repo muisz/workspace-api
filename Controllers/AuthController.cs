@@ -13,12 +13,19 @@ namespace WorkspaceAPI.Controllers
         private readonly IAuthService _authService;
         private readonly IOTPService _otpService;
         private readonly IEmailService _emailService;
+        private readonly IJWTService _jwtService;
 
-        public AuthController(IAuthService authService, IOTPService otpService, IEmailService emailService)
+        public AuthController(
+            IAuthService authService, 
+            IOTPService otpService, 
+            IEmailService emailService,
+            IJWTService jwtService
+        )
         {
             _authService = authService;
             _otpService = otpService;
             _emailService = emailService;
+            _jwtService = jwtService;
         }
 
         [HttpPost("register")]
@@ -48,7 +55,8 @@ namespace WorkspaceAPI.Controllers
                     Id = user.Id,
                     Name = user.Name,
                     Username = user.Username,
-                    LastActive = user.LastActive
+                    LastActive = user.LastActive,
+                    Token = _jwtService.CreateTokenPair(user)
                 });
             }
             catch (Exception error)
@@ -108,18 +116,47 @@ namespace WorkspaceAPI.Controllers
                 _authService.VerifyEmail(user);
                 _otpService.Deactivate(otp);
 
-                Token token = new Token
-                {
-                    Access = "",
-                    Refresh = "",
-                };
-                return Ok(token);
+                return Ok(_jwtService.CreateTokenPair(user));
             }
             catch (Exception error)
             {
                 return Problem(error.Message, statusCode: StatusCodes.Status400BadRequest);
             }
         }
-    }
 
+        [HttpPost("jwt/refresh")]
+        public ActionResult<Token> PostRefreshJwtToken(RefreshToken payload)
+        {
+            try
+            {
+                string? email = _jwtService.ClaimRefreshToken(payload.Token);
+                User? user = _authService.GetUserByEmail(email ?? "");
+                if (user == null)
+                    throw new Exception("User not found");
+                
+                return Ok(_jwtService.CreateTokenPair(user));
+            }
+            catch (Exception error)
+            {
+                return Problem(error.Message, statusCode: StatusCodes.Status400BadRequest);
+            }
+        }
+
+        [HttpPost("jwt/verify")]
+        public ActionResult<PostCheckOTPResponse> PostVerifyJwtToken(RefreshToken payload)
+        {
+            try
+            {
+                string? email = _jwtService.ClaimAccessToken(payload.Token);
+                if (email == null)
+                    throw new Exception("Invalid token");
+                
+                return Ok(new PostCheckOTPResponse { Valid = true, Message = "Token valid."});
+            }
+            catch (Exception error)
+            {
+                return BadRequest(new PostCheckOTPResponse { Valid = false, Message = error.Message });
+            }
+        }
+    }
 }
