@@ -40,5 +40,24 @@ namespace WorkspaceAPI.Services
         {
             return _context.Workspaces.Include(workspace => workspace.Members.Where(member => member.UserId == user.Id)).ToList();
         }
+
+        public Workspace? GetWorkspace(int id)
+        {
+            return _context.Workspaces.SingleOrDefault(workspace => workspace.Id == id);
+        }
+
+        public bool IsMemberOfWorkspace(Workspace workspace, User user)
+        {
+            bool isMember = false;
+            foreach (WorkspaceMember member in workspace.Members)
+            {
+                if (member.UserId == user.Id)
+                {
+                    isMember = true;
+                    break;
+                }
+            }
+            return isMember;
+        }
     }
 }

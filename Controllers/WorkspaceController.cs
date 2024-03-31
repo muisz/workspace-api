@@ -77,5 +77,44 @@ namespace WorkspaceAPI.Controllers
                 return Problem(error.Message, statusCode: StatusCodes.Status400BadRequest);
             }
         }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public ActionResult<WorkspaceResponse> GetWorkspace(int id)
+        {
+            try
+            {
+                User? user = _authService.GetUserByEmail(User?.Claims.First(c => c.Type == ClaimTypes.Email).Value ?? "");
+                if (user == null)
+                    throw new Exception("User not found");
+                
+                Workspace? workspace = _workspaceService.GetWorkspace(id);
+                if (workspace == null || !_workspaceService.IsMemberOfWorkspace(workspace, user))
+                    throw new Exception("Workspace not found");
+                
+                WorkspaceResponse response = new WorkspaceResponse
+                {
+                    Id = workspace.Id,
+                    Name = workspace.Name,
+                    CreatedAt = workspace.CreatedAt,
+                };
+                foreach (WorkspaceMember member in workspace.Members)
+                {
+                    response.Members.Add(new WorkspaceMemberResponse {
+                        Id = member.Id,
+                        UserId = member.UserId,
+                        Name = member.User.Name,
+                        Role = member.Role,
+                        CreatedAt = member.CreatedAt,
+                    });
+                }
+                return Ok(response);
+
+            }
+            catch (Exception error)
+            {
+                return Problem(error.Message, statusCode: StatusCodes.Status404NotFound);
+            }
+        }
     }
 }

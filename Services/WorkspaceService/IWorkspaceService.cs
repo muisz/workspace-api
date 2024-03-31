@@ -7,5 +7,7 @@ namespace WorkspaceAPI.Services
     {
         public Workspace CreateWorkspace(CreateWorkspace payload, User user);
         public ICollection<Workspace> GetWorkspaces(User user);
+        public Workspace? GetWorkspace(int id);
+        public bool IsMemberOfWorkspace(Workspace workspace, User user);
     }
 }
