@@ -43,7 +43,7 @@ namespace WorkspaceAPI.Services
 
         public Workspace? GetWorkspace(int id)
         {
-            return _context.Workspaces.SingleOrDefault(workspace => workspace.Id == id);
+            return _context.Workspaces.Include(workspace => workspace.Members).SingleOrDefault(workspace => workspace.Id == id);
         }
 
         public bool IsMemberOfWorkspace(Workspace workspace, User user)
