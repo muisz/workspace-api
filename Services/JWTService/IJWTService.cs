@@ -5,7 +5,7 @@ namespace WorkspaceAPI.Services
 {
     public interface IJWTService
     {
-        public Token CreateTokenPair(User user);
+        public TokenData CreateTokenPair(User user);
         public string CreateAccessToken(User user);
         public string CreateRefreshToken(User user);
         public string? ClaimAccessToken(string token);

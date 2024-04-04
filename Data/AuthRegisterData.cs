@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WorkspaceAPI.Data
 {
-    public class AuthRegister
+    public class AuthRegisterData
     {
         [Required]
         public string Name { get; set; } = string.Empty;

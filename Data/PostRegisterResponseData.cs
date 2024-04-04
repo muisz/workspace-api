@@ -1,6 +1,6 @@
 namespace WorkspaceAPI.Data
 {
-    public class PostWorkspaceResponse
+    public class PostRegisterResponseData
     {
         public int Id { get; set; }
     }

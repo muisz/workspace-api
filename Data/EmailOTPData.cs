@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WorkspaceAPI.Data
 {
-    public class EmailOTP
+    public class EmailOTPData
     {
         [Required]
         [EmailAddress]

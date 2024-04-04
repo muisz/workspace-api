@@ -22,7 +22,7 @@ namespace WorkspaceAPI.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult<PostWorkspaceResponse> PostCreateWorkspace(CreateWorkspace payload)
+        public ActionResult<PostWorkspaceResponseData> PostCreateWorkspace(CreateWorkspaceData payload)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace WorkspaceAPI.Controllers
                     throw new Exception("User not found");
                 
                 Workspace workspace = _workspaceService.CreateWorkspace(payload, user);
-                return Ok(new PostWorkspaceResponse { Id = workspace.Id });
+                return Ok(new PostWorkspaceResponseData { Id = workspace.Id });
             }
             catch (Exception error)
             {
@@ -41,7 +41,7 @@ namespace WorkspaceAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult<ICollection<WorkspaceResponse>> GetWorkspaces()
+        public ActionResult<ICollection<WorkspaceResponseData>> GetWorkspaces()
         {
             try
             {
@@ -50,17 +50,17 @@ namespace WorkspaceAPI.Controllers
                     throw new Exception("User not found");
                 
                 ICollection<Workspace> workspaces = _workspaceService.GetWorkspaces(user);
-                ICollection<WorkspaceResponse> responses = new List<WorkspaceResponse>();
+                ICollection<WorkspaceResponseData> responses = new List<WorkspaceResponseData>();
                 foreach (Workspace workspace in workspaces)
                 {
-                    WorkspaceResponse workspaceResponse = new WorkspaceResponse{
+                    WorkspaceResponseData workspaceResponse = new WorkspaceResponseData{
                         Id = workspace.Id,
                         Name = workspace.Name,
                         CreatedAt = workspace.CreatedAt,
                     };
                     foreach (WorkspaceMember member in workspace.Members)
                     {
-                        workspaceResponse.Members.Add(new WorkspaceMemberResponse{
+                        workspaceResponse.Members.Add(new WorkspaceMemberResponseData{
                             Id = member.Id,
                             UserId = member.UserId,
                             Name = member.User.Name,
@@ -80,7 +80,7 @@ namespace WorkspaceAPI.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public ActionResult<WorkspaceResponse> GetWorkspace(int id)
+        public ActionResult<WorkspaceResponseData> GetWorkspace(int id)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace WorkspaceAPI.Controllers
                 if (workspace == null || !_workspaceService.IsMemberOfWorkspace(workspace, user))
                     throw new Exception("Workspace not found");
                 
-                WorkspaceResponse response = new WorkspaceResponse
+                WorkspaceResponseData response = new WorkspaceResponseData
                 {
                     Id = workspace.Id,
                     Name = workspace.Name,
@@ -100,7 +100,7 @@ namespace WorkspaceAPI.Controllers
                 };
                 foreach (WorkspaceMember member in workspace.Members)
                 {
-                    response.Members.Add(new WorkspaceMemberResponse {
+                    response.Members.Add(new WorkspaceMemberResponseData {
                         Id = member.Id,
                         UserId = member.UserId,
                         Name = member.User.Name,

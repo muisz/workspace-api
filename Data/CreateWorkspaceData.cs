@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WorkspaceAPI.Data
 {
-    public class CreateWorkspace
+    public class CreateWorkspaceData
     {
         [Required]
         [StringLength(100, MinimumLength = 5)]

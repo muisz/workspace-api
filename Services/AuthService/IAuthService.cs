@@ -5,7 +5,7 @@ namespace WorkspaceAPI.Services
 {
     public interface IAuthService
     {
-        public User Register(AuthRegister payload);
+        public User Register(AuthRegisterData payload);
         public User? GetUserByUsername(string value);
         public User? GetUserByEmail(string value);
         public User Authenticate(string email, string password);

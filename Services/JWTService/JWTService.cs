@@ -22,11 +22,11 @@ namespace WorkspaceAPI.Services
             _issuer = _configuration["JWT:Issuer"] ?? "";
         }
 
-        public Token CreateTokenPair(User user)
+        public TokenData CreateTokenPair(User user)
         {
             string accessToken = CreateAccessToken(user);
             string refreshToken = CreateRefreshToken(user);
-            return new Token
+            return new TokenData
             {
                 Access = accessToken,
                 Refresh = refreshToken,

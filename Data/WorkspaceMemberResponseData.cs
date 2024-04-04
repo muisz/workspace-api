@@ -2,7 +2,7 @@ using WorkspaceAPI.Enums;
 
 namespace WorkspaceAPI.Data
 {
-    public class WorkspaceMemberResponse
+    public class WorkspaceMemberResponseData
     {
         public int Id { get; set; }
         public int UserId { get; set; }

@@ -13,7 +13,7 @@ namespace WorkspaceAPI.Services
             _context = context;
         }
 
-        public Workspace CreateWorkspace(CreateWorkspace payload, User user)
+        public Workspace CreateWorkspace(CreateWorkspaceData payload, User user)
         {
             Workspace workspace = new Workspace
             {

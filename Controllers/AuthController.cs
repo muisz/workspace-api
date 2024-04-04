@@ -29,12 +29,12 @@ namespace WorkspaceAPI.Controllers
         }
 
         [HttpPost("register")]
-        public ActionResult<PostRegisterResponse> PostRegister(AuthRegister payload)
+        public ActionResult<PostRegisterResponseData> PostRegister(AuthRegisterData payload)
         {
             try
             {
                 User user = _authService.Register(payload);
-                return StatusCode(StatusCodes.Status201Created, new PostRegisterResponse{ Id = user.Id });
+                return StatusCode(StatusCodes.Status201Created, new PostRegisterResponseData{ Id = user.Id });
             }
             catch (Exception error)
             {
@@ -43,7 +43,7 @@ namespace WorkspaceAPI.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<PostLoginResponse> PostLogin(AuthLogin payload)
+        public ActionResult<PostLoginResponseData> PostLogin(AuthLoginData payload)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace WorkspaceAPI.Controllers
                 if (!user.EmailVerified)
                     throw new Exception("Email not verified");
                 
-                return Ok(new PostLoginResponse { 
+                return Ok(new PostLoginResponseData { 
                     Id = user.Id,
                     Name = user.Name,
                     Username = user.Username,
@@ -66,7 +66,7 @@ namespace WorkspaceAPI.Controllers
         }
 
         [HttpPost("otp-registration/send")]
-        public ActionResult PostSendOTPRegistration(SendOTPRegistration payload)
+        public ActionResult PostSendOTPRegistration(SendOTPRegistrationData payload)
         {
             User? user = _authService.GetUserByEmail(payload.Email);
             if (user == null)
@@ -81,7 +81,7 @@ namespace WorkspaceAPI.Controllers
         }
 
         [HttpPost("otp-registration/check")]
-        public ActionResult<PostCheckOTPResponse> PostCheckOTPRegistration(EmailOTP payload)
+        public ActionResult<PostCheckOTPResponseData> PostCheckOTPRegistration(EmailOTPData payload)
         {
             try
             {
@@ -90,16 +90,16 @@ namespace WorkspaceAPI.Controllers
                     throw new Exception("OTP not found");
                 
                 _otpService.IsValid(otp);
-                return Ok(new PostCheckOTPResponse { Valid = true, Message = "OTP valid." });
+                return Ok(new PostCheckOTPResponseData { Valid = true, Message = "OTP valid." });
             }
             catch (Exception error)
             {
-                return BadRequest(new PostCheckOTPResponse { Valid = false, Message = error.Message });
+                return BadRequest(new PostCheckOTPResponseData { Valid = false, Message = error.Message });
             }
         }
 
         [HttpPost("verify-email")]
-        public ActionResult<Token> PostVerifyEmail(EmailOTP payload)
+        public ActionResult<TokenData> PostVerifyEmail(EmailOTPData payload)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace WorkspaceAPI.Controllers
         }
 
         [HttpPost("jwt/refresh")]
-        public ActionResult<Token> PostRefreshJwtToken(RefreshToken payload)
+        public ActionResult<TokenData> PostRefreshJwtToken(RefreshTokenData payload)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace WorkspaceAPI.Controllers
         }
 
         [HttpPost("jwt/verify")]
-        public ActionResult<PostCheckOTPResponse> PostVerifyJwtToken(RefreshToken payload)
+        public ActionResult<PostCheckOTPResponseData> PostVerifyJwtToken(RefreshTokenData payload)
         {
             try
             {
@@ -151,11 +151,11 @@ namespace WorkspaceAPI.Controllers
                 if (email == null)
                     throw new Exception("Invalid token");
                 
-                return Ok(new PostCheckOTPResponse { Valid = true, Message = "Token valid."});
+                return Ok(new PostCheckOTPResponseData { Valid = true, Message = "Token valid."});
             }
             catch (Exception error)
             {
-                return BadRequest(new PostCheckOTPResponse { Valid = false, Message = error.Message });
+                return BadRequest(new PostCheckOTPResponseData { Valid = false, Message = error.Message });
             }
         }
     }

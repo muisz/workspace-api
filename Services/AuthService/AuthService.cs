@@ -14,7 +14,7 @@ namespace WorkspaceAPI.Services
             _hasher = hasher;
         }
 
-        public User Register(AuthRegister payload)
+        public User Register(AuthRegisterData payload)
         {
             User? userWithSameUsername = GetUserByUsername(payload.Username);
             if (userWithSameUsername != null)
