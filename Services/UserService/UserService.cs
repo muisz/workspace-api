@@ -3,12 +3,12 @@ using WorkspaceAPI.Models;
 
 namespace WorkspaceAPI.Services
 {
-    public class AuthService : IAuthService
+    public class UserService : IUserService
     {
         private readonly DatabaseContext _context;
         private readonly IPasswordHasher _hasher;
 
-        public AuthService(DatabaseContext context, IPasswordHasher hasher)
+        public UserService(DatabaseContext context, IPasswordHasher hasher)
         {
             _context = context;
             _hasher = hasher;

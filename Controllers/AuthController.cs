@@ -10,19 +10,19 @@ namespace WorkspaceAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IUserService _userService;
         private readonly IOTPService _otpService;
         private readonly IEmailService _emailService;
         private readonly IJWTService _jwtService;
 
         public AuthController(
-            IAuthService authService, 
+            IUserService userService, 
             IOTPService otpService, 
             IEmailService emailService,
             IJWTService jwtService
         )
         {
-            _authService = authService;
+            _userService = userService;
             _otpService = otpService;
             _emailService = emailService;
             _jwtService = jwtService;
@@ -33,7 +33,7 @@ namespace WorkspaceAPI.Controllers
         {
             try
             {
-                User user = _authService.Register(payload);
+                User user = _userService.Register(payload);
                 return StatusCode(StatusCodes.Status201Created, new PostRegisterResponseData{ Id = user.Id });
             }
             catch (Exception error)
@@ -47,7 +47,7 @@ namespace WorkspaceAPI.Controllers
         {
             try
             {
-                User user = _authService.Authenticate(payload.Email, payload.Password);
+                User user = _userService.Authenticate(payload.Email, payload.Password);
                 if (!user.EmailVerified)
                     throw new Exception("Email not verified");
                 
@@ -68,7 +68,7 @@ namespace WorkspaceAPI.Controllers
         [HttpPost("otp-registration/send")]
         public ActionResult PostSendOTPRegistration(SendOTPRegistrationData payload)
         {
-            User? user = _authService.GetUserByEmail(payload.Email);
+            User? user = _userService.GetUserByEmail(payload.Email);
             if (user == null)
                 return Problem("Email not found.", statusCode: StatusCodes.Status404NotFound);
             
@@ -109,11 +109,11 @@ namespace WorkspaceAPI.Controllers
                 
                 _otpService.IsValid(otp);
 
-                User? user = _authService.GetUserByEmail(payload.Email);
+                User? user = _userService.GetUserByEmail(payload.Email);
                 if (user == null)
                     throw new Exception("Email not found.");
                 
-                _authService.VerifyEmail(user);
+                _userService.VerifyEmail(user);
                 _otpService.Deactivate(otp);
 
                 return Ok(_jwtService.CreateTokenPair(user));
@@ -130,7 +130,7 @@ namespace WorkspaceAPI.Controllers
             try
             {
                 string? email = _jwtService.ClaimRefreshToken(payload.Token);
-                User? user = _authService.GetUserByEmail(email ?? "");
+                User? user = _userService.GetUserByEmail(email ?? "");
                 if (user == null)
                     throw new Exception("User not found");
                 

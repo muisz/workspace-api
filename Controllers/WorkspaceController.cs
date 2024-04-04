@@ -12,12 +12,12 @@ namespace WorkspaceAPI.Controllers
     public class WorkspaceController : ControllerBase
     {
         private readonly IWorkspaceService _workspaceService;
-        private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public WorkspaceController(IWorkspaceService workspaceService, IAuthService authService)
+        public WorkspaceController(IWorkspaceService workspaceService, IUserService userService)
         {
             _workspaceService = workspaceService;
-            _authService = authService;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -26,7 +26,7 @@ namespace WorkspaceAPI.Controllers
         {
             try
             {
-                User? user = _authService.GetUserByEmail(User?.Claims.First(c => c.Type == ClaimTypes.Email).Value ?? "");
+                User? user = _userService.GetUserByEmail(User?.Claims.First(c => c.Type == ClaimTypes.Email).Value ?? "");
                 if (user == null)
                     throw new Exception("User not found");
                 
@@ -45,7 +45,7 @@ namespace WorkspaceAPI.Controllers
         {
             try
             {
-                User? user = _authService.GetUserByEmail(User?.Claims.First(c => c.Type == ClaimTypes.Email).Value ?? "");
+                User? user = _userService.GetUserByEmail(User?.Claims.First(c => c.Type == ClaimTypes.Email).Value ?? "");
                 if (user == null)
                     throw new Exception("User not found");
                 
@@ -84,7 +84,7 @@ namespace WorkspaceAPI.Controllers
         {
             try
             {
-                User? user = _authService.GetUserByEmail(User?.Claims.First(c => c.Type == ClaimTypes.Email).Value ?? "");
+                User? user = _userService.GetUserByEmail(User?.Claims.First(c => c.Type == ClaimTypes.Email).Value ?? "");
                 if (user == null)
                     throw new Exception("User not found");
                 

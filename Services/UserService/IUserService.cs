@@ -3,7 +3,7 @@ using WorkspaceAPI.Models;
 
 namespace WorkspaceAPI.Services
 {
-    public interface IAuthService
+    public interface IUserService
     {
         public User Register(AuthRegisterData payload);
         public User? GetUserByUsername(string value);
